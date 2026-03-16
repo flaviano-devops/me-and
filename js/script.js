@@ -27,7 +27,7 @@ const titulo = document.getElementById("titulo");
 
 if (titulo) {
 
-    const texto = "Oi, sou eu! Flaviano.";
+    const texto = "Bem-vindo ao sistema!";
     let i = 0;
 
     titulo.textContent = "";
@@ -158,3 +158,15 @@ window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 });
+
+function toggleMenu(){
+
+const menu = document.getElementById("listaPersonagens")
+
+if(menu.style.display === "flex"){
+menu.style.display = "none"
+}else{
+menu.style.display = "flex"
+}
+
+}

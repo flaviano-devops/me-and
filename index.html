@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,33 +7,64 @@
 
     <link rel="stylesheet" href="css/style.css">
     <script src="js/script.js" defer></script>
-    
 </head>
 
 <body>
 
 <canvas id="particulas"></canvas>
-    
 
-    <div class="container">
-        <img src="images/itadori.png" class="avatar">
-        <div class="card">
-            <button id="tema" class = "botao-tema"><span>☽︎</span></button>
-            <h1 id = "titulo">Oi, sou eu! Flaviano.</h1>
-            <p id="data"></p>
+<div class="container">
 
-            <p>
-                Seja bem-vindo para essa demonstração agradável!
-                Só quero te mostrar algumas coisas legais. Sabe aquela sensação de quando você vê algo tão bonito que te deixa sem palavras? É isso que eu quero te proporcionar.
-            </p>
+    <img src="images/itadori.png" class="avatar">
 
-            <footer class = "rodape">
-              <p>&copy; 2026 Criado por <strong>Flaviano</strong></p>
-            </footer>
-            
-        </div>
-        <a href="pages/pg1.html" class="botao-nav">Continuar</a>
+    <div class="card">
+
+        <button id="tema" class="botao-tema">
+            <span>☽︎</span>
+        </button>
+
+        <h1 id="titulo">Bem-vindo ao sistema</h1>
+
+        <p id="data"></p>
+
+        <p>
+            Jujutsu Kaisen tem vários personagens interessantes, cada um com suas peculiaridades, 
+            e a história é muito envolvente, tem um ótimo desenvolvimento, e o final do anime é muito bom, sem contar que tem uma ótima animação.
+            Só quero te mostrar um pouco sobre alguns personagens do anime Jujutsu Kaisen e minha opinião sobre eles, espero que goste!
+        </p>
+
+        <footer class="rodape">
+            <p>&copy; 2026 Criado por <strong>Flaviano</strong></p>
+        </footer>
+
     </div>
+
     
+
+    <div class="botoes-principais">
+
+        <a href="pages/pg1.html" class="botao-nav">Continuar</a>
+        <button class="botao-nav" onclick="toggleMenu()">Personagens</button>
+
+    </div>
+
+    <div class="lista-personagens" id="listaPersonagens">
+
+        <a href="pages/gojo.html">
+        <img src="images/gojo.jpg">
+        <span>Satoru Gojo</span></a>
+
+        <a href="pages/megumi.html">
+        <img src="images/megumi.jpg">
+        <span>Megumi Fushiguro</span></a>
+
+        <a href="pagesNobara/pg1.html">
+        <img src="images/nobara.jpg">
+        <span>Nobara Kugisaki</span></a>
+
+    </div>
+
+</div>
+
 </body>
 </html>

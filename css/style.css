@@ -56,7 +56,8 @@ a:hover {
 /* Layout para celular */
 @media (max-width: 768px) {
     .card {
-        width: 88%; /* ocupa quase toda a tela */
+        box-sizing: border-box;
+        width: 95%; /* ocupa quase toda a tela */
         padding: 20px;
         font-size: 16px; /* texto maior para leitura confortável */
     }
@@ -410,3 +411,153 @@ margin:auto;
 line-height:1.6;
 }
 
+.botoes-principais{
+display:flex;
+justify-content:center;
+gap:15px;
+
+width:100%;
+max-width:320px;
+
+margin:20px auto;
+}
+
+.botoes-principais .botao-nav{
+flex:1;
+text-align:center;
+}
+
+.lista-personagens{
+display:none;
+
+flex-direction:row;
+justify-content:center;
+flex-wrap:wrap;
+
+gap:12px;
+
+margin-top:1px;   /* diminui distância dos botões */
+
+width:100%;
+}
+
+.lista-personagens a{
+
+display:flex;
+align-items:center;
+gap:12px;
+
+width:fit-content;
+
+padding:12px 18px;
+
+border:2px solid #e50914;
+border-radius:12px;
+
+background:#000;
+color:#ff0000;
+
+text-decoration:none;
+font-weight:bold;
+
+transition:0.3s;
+
+box-shadow:0 0 12px rgba(229,9,20,0.6);
+
+}
+
+
+.lista-personagens a:hover{
+
+background:#e50914;
+color:white;
+
+transform:scale(1.05);
+
+box-shadow:0 0 25px rgba(229,9,20,0.9);
+
+}
+
+.lista-personagens img{
+
+width:50px;
+height:50px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:2px solid #e50914;
+
+}
+
+/* ===== PERSONAGENS NO TEMA CLARO ===== */
+
+.light .lista-personagens a{
+
+background:#ffffff;
+
+color:#e50914;
+
+border:2px solid #e50914;
+
+box-shadow:0 0 10px rgba(229,9,20,0.4);
+
+}
+
+.light .lista-personagens a:hover{
+
+background:#e50914;
+
+color:#ffffff;
+
+box-shadow:0 0 20px rgba(229,9,20,0.7);
+
+}
+
+.light .lista-personagens img{
+
+border:2px solid #e50914;
+
+}
+
+@media (max-width: 600px){
+
+.lista-personagens{
+display:flex;
+flex-direction:row;
+justify-content:center;
+flex-wrap:wrap;
+gap:8px;
+}
+
+.lista-personagens a{
+
+padding:8px 12px;
+font-size:14px;
+
+}
+
+.lista-personagens img{
+
+width:30px;
+height:30px;
+
+}
+
+}
+
+.avatar{
+animation:flutuar 3s ease-in-out infinite;
+}
+
+@keyframes flutuar{
+0%{transform:translateY(0);}
+50%{transform:translateY(-6px);}
+100%{transform:translateY(0);}
+}
+
+.botao-nav:active,
+.lista-personagens a:active{
+transform:scale(0.95);
+}
