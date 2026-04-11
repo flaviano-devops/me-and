@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Técnica das Dez Sombras</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/dezsombras.js" defer></script>
+    <script src="../js/script.js" defer></script>
+</head>
+
+<body class = "dez-sombras">
+
+    <canvas id="particulas"></canvas>
+
+    <div class="container">
+
+        <img src="../images/megumi3.jpg" class="avatar">
+
+        <div class="card">
+
+            <h1>Técnica das Dez Sombras</h1>
+
+            <p>
+                A Técnica das Dez Sombras permite que Megumi Fushiguro invoque diferentes
+                shikigamis usando sombras como meio. Cada criatura possui habilidades únicas
+                e pode ser usada em diferentes estratégias de batalha.
+            </p>
+
+        </div>
+
+        <!-- BOTÕES DOS SHIKIGAMIS -->
+
+        <div class="shikigamis">
+
+            <button onclick="mostrarShikigami('lobo')">
+                Cães Divinos
+            </button>
+
+            <button onclick="mostrarShikigami('nue')">
+                Nue
+            </button>
+
+            <button onclick="mostrarShikigami('sapo')">
+                Sapo
+            </button>
+
+            <button onclick="mostrarShikigami('elefante')">
+                Elefante Máximo
+            </button>
+
+            <button onclick="mostrarShikigami('mahoraga')">
+                Mahoraga
+            </button>
+
+        </div>
+
+        <!-- ÁREA INTERATIVA -->
+
+        <div id="area-shikigami" class="card">
+
+            <h2>Selecione um shikigami</h2>
+
+            <p>
+                Clique em um dos shikigamis para ver sua habilidade.
+            </p>
+
+        </div>
+
+        <div class="nav-botoes">
+
+            <a href="pg1.html" class="botao-nav">
+                Página Anterior
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

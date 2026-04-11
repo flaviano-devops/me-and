@@ -170,3 +170,21 @@ menu.style.display = "flex"
 }
 
 }
+
+function mostrarInfo(tipo){
+    let texto = ""
+
+    if(tipo === "cachorro"){
+        texto = "Os cães divinos ajudam Megumi a rastrear maldições."
+    }
+
+    if(tipo === "nue"){
+        texto = "Nue é uma criatura elétrica usada para ataques rápidos."
+    }
+
+    if(tipo === "sapo"){
+        texto = "Os sapos ajudam a capturar inimigos."
+    }
+
+    document.getElementById("info").innerText = texto
+}

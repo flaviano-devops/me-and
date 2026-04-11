@@ -561,3 +561,123 @@ animation:flutuar 3s ease-in-out infinite;
 .lista-personagens a:active{
 transform:scale(0.95);
 }
+
+.shikigamis{
+
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+
+gap:12px;
+
+margin:20px 0;
+
+}
+
+.shikigamis button{
+
+padding:12px 18px;
+
+border:2px solid #e50914;
+
+background:#000;
+
+color:#ff0000;
+
+border-radius:10px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:0.3s;
+
+box-shadow:0 0 10px rgba(229,9,20,0.6);
+
+}
+
+.shikigamis button:hover{
+
+background:#e50914;
+color:white;
+transform:scale(1.05);
+
+}
+
+/* ===== PÁGINA DEZ SOMBRAS ===== */
+
+.dez-sombras #area-shikigami{
+
+display:flex;
+flex-direction:column;
+align-items:center;
+text-align:center;
+
+gap:10px;
+
+}
+
+.dez-sombras #area-shikigami img{
+
+width:100%;
+max-width:400px;
+
+height:auto;
+
+margin-top:15px;
+
+border-radius:10px;
+
+border:2px solid #e50914;
+
+box-shadow:0 0 20px rgba(229,9,20,0.8);
+
+}
+
+
+
+/* Layout da página das Dez Sombras */
+
+.dez-sombras .container{
+display:grid;
+grid-template-columns: 200px 1fr;
+grid-template-areas:
+
+"avatar cardMegumi"
+"botoes cardShikigami"
+"nav nav";
+
+gap:20px;
+justify-content:center;
+max-width:900px;
+margin:auto;
+}
+.dez-sombras .avatar{
+grid-area:avatar;
+width:110px;
+}
+
+.dez-sombras .card:first-of-type{
+grid-area:cardMegumi;
+}
+
+.dez-sombras .shikigamis{
+grid-area:botoes;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.dez-sombras #area-shikigami{
+max-width:350px;
+padding:20px;
+margin:auto;
+text-align:center;
+}
+
+.dez-sombras .nav-botoes{
+grid-area:nav;
+text-align:center;
+margin-top:20px;
+}
+
