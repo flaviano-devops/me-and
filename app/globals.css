@@ -61,6 +61,13 @@ h1,h2,p { text-wrap:balance; }
 .editorActions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:8px; margin-top:14px; }
 .editorActions button { min-height:40px; padding:7px 12px; border:1px solid var(--border); border-radius:8px; background:var(--panel2); color:var(--text); font-weight:800; cursor:pointer; }
 .editorActions .primary { background:#d70a16;color:#fff; }
+.editorNotice { margin:10px 0 0; color:#ddd; font-size:.85rem; text-align:center; }
+.authPage { width:min(100% - 32px,460px); min-height:100vh; margin:auto; display:flex; flex-direction:column; justify-content:center; gap:14px; }
+.authPage h1,.authPage p { margin:0; }
+.authPage form { display:grid; gap:13px; padding:24px; border:1px solid var(--border); border-radius:16px; background:var(--panel); }
+.authPage label { display:grid; gap:5px; color:var(--muted); font-weight:800; }
+.authPage input { padding:11px; border:1px solid var(--border); border-radius:8px; background:var(--panel2); color:var(--text); }
+.authPage button,.authPage a { width:fit-content; padding:10px 16px; border:1px solid var(--border); border-radius:8px; background:var(--panel2); color:var(--text); font-weight:800; text-decoration:none; cursor:pointer; }
 .story { margin-top:18px; padding:28px; border:1px solid var(--border); border-radius:18px; background:var(--panel); }
 .story h2 { margin:4px 0 8px; font-size:1.8rem; }
 .story p { margin:0; color:var(--muted); }

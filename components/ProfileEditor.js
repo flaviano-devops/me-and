@@ -1,69 +1,98 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
-const fileToDataUrl = (file) => new Promise((resolve) => {
-  if (!file) return resolve(null);
-  const reader = new FileReader();
-  reader.onload = () => resolve(reader.result);
-  reader.readAsDataURL(file);
+const fromDatabase = (row, fallback) => ({
+  ...fallback,
+  name: row.name,
+  handle: row.handle,
+  bio: row.bio,
+  tags: row.tags || fallback.tags,
+  avatar: row.avatar_url || fallback.avatar,
+  cover: row.cover_url || fallback.cover,
+  stats: row.stats || fallback.stats
 });
 
 export default function ProfileEditor({ character, onChange }) {
-  const storageKey = `profile-next-${character.slug}`;
+  const supabase = getSupabaseBrowserClient();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const [form, setForm] = useState(character);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
-      if (saved) {
-        const merged = { ...character, ...saved };
-        setForm(merged);
-        onChange(merged);
-      }
-    } catch {
-      localStorage.removeItem(storageKey);
-    }
-  }, [character, onChange, storageKey]);
+    if (!supabase) return;
+    supabase.auth.getUser().then(({ data }) => setUser(data.user || null));
+    supabase.from("character_profiles").select("*").eq("slug", character.slug).maybeSingle()
+      .then(({ data }) => {
+        if (!data) return;
+        const profile = fromDatabase(data, character);
+        setForm(profile);
+        onChange(profile);
+      });
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => setUser(session?.user || null));
+    return () => data.subscription.unsubscribe();
+  }, [character, onChange, supabase]);
+
+  const upload = async (file, type) => {
+    if (!file) return null;
+    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `${character.slug}/${user.id}/${type}-${Date.now()}.${extension}`;
+    const { error } = await supabase.storage.from("profile-media").upload(path, file, { upsert: true, contentType: file.type });
+    if (error) throw error;
+    return supabase.storage.from("profile-media").getPublicUrl(path).data.publicUrl;
+  };
 
   const save = async (event) => {
     event.preventDefault();
-    const fields = new FormData(event.currentTarget);
-    const avatar = await fileToDataUrl(fields.get("avatar"));
-    const cover = await fileToDataUrl(fields.get("cover"));
-    const updated = {
-      ...form,
-      name: fields.get("name").trim() || character.name,
-      handle: fields.get("handle").trim() || character.handle,
-      bio: fields.get("bio").trim() || character.bio,
-      tags: fields.get("tags").split(",").map((tag) => tag.trim()).filter(Boolean).slice(0, 5),
-      avatar: avatar || form.avatar || character.avatar,
-      cover: cover || form.cover || character.cover
-    };
+    if (!supabase || !user) return;
+    setMessage("Salvando...");
     try {
-      localStorage.setItem(storageKey, JSON.stringify(updated));
+      const fields = new FormData(event.currentTarget);
+      const avatar = await upload(fields.get("avatar")?.size ? fields.get("avatar") : null, "avatar");
+      const cover = await upload(fields.get("cover")?.size ? fields.get("cover") : null, "cover");
+      const updated = {
+        ...form,
+        name: fields.get("name").trim() || character.name,
+        handle: fields.get("handle").trim() || character.handle,
+        bio: fields.get("bio").trim() || character.bio,
+        tags: fields.get("tags").split(",").map((tag) => tag.trim()).filter(Boolean).slice(0, 5),
+        avatar: avatar || form.avatar || character.avatar,
+        cover: cover || form.cover || character.cover
+      };
+      const { error } = await supabase.from("character_profiles").upsert({
+        slug: character.slug,
+        name: updated.name,
+        handle: updated.handle,
+        bio: updated.bio,
+        tags: updated.tags,
+        avatar_url: updated.avatar,
+        cover_url: updated.cover,
+        stats: updated.stats,
+        updated_by: user.id,
+        updated_at: new Date().toISOString()
+      });
+      if (error) throw error;
       setForm(updated);
       onChange(updated);
+      setMessage("Perfil salvo no Supabase.");
       setOpen(false);
-    } catch {
-      window.alert("A imagem é grande demais. Escolha um arquivo menor.");
+    } catch (error) {
+      setMessage(error.message || "Não foi possível salvar.");
     }
   };
 
-  const restoreImages = () => {
+  const restoreImages = async () => {
     const restored = { ...form, avatar: character.avatar, cover: character.cover };
-    localStorage.setItem(storageKey, JSON.stringify(restored));
     setForm(restored);
     onChange(restored);
+    setMessage("Imagens restauradas. Clique em Salvar para confirmar.");
   };
 
-  const restoreAll = () => {
-    localStorage.removeItem(storageKey);
-    setForm(character);
-    onChange(character);
-    setOpen(false);
-  };
+  if (!supabase) return <p className="editorNotice">Supabase não configurado.</p>;
+  if (!user) return <Link className="editButton" href="/admin">Entrar para editar</Link>;
 
   return (
     <>
@@ -84,12 +113,12 @@ export default function ProfileEditor({ character, onChange }) {
           </div>
           <div className="editorActions">
             <button type="button" onClick={restoreImages}>Imagens originais</button>
-            <button type="button" onClick={restoreAll}>Restaurar tudo</button>
             <button type="button" onClick={() => setOpen(false)}>Cancelar</button>
-            <button className="primary" type="submit">Salvar</button>
+            <button className="primary" type="submit">Salvar no Supabase</button>
           </div>
         </form>
       )}
+      {message && <p className="editorNotice" role="status">{message}</p>}
     </>
   );
 }
