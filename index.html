@@ -1,70 +1,29 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About me</title>
-
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/script.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Perfis e histórias dos personagens de Jujutsu Kaisen favoritos de Flaviano.">
+  <meta name="theme-color" content="#08090b">
+  <title>Entre Maldições — Jujutsu Kaisen</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/script.js" defer></script>
 </head>
-
 <body>
-
-<canvas id="particulas"></canvas>
-
-<div class="container">
-
-    <img src="images/itadori.png" class="avatar">
-
-    <div class="card">
-
-        <button id="tema" class="botao-tema">
-            <span>☽︎</span>
-        </button>
-
-        <h1 id="titulo">Bem-vindo ao sistema</h1>
-
-        <p id="data"></p>
-
-        <p>
-            Jujutsu Kaisen tem vários personagens interessantes, cada um com suas peculiaridades, 
-            e a história é muito envolvente, tem um ótimo desenvolvimento, e o final do anime é muito bom, sem contar que tem uma ótima animação.
-            Só quero te mostrar um pouco sobre alguns personagens do anime Jujutsu Kaisen e minha opinião sobre eles, espero que goste!
-        </p>
-
-        <footer class="rodape">
-            <p>&copy; 2026 Criado por <strong>Flaviano</strong></p>
-        </footer>
-
-    </div>
-
-    
-
-    <div class="botoes-principais">
-
-        <a href="pages/pg1.html" class="botao-nav">Continuar</a>
-        <button class="botao-nav" onclick="toggleMenu()">Personagens</button>
-
-    </div>
-
-    <div class="lista-personagens" id="listaPersonagens">
-
-        <a href="pages/gojo.html">
-        <img src="images/gojo.jpg">
-        <span>Satoru Gojo</span></a>
-
-        <a href="pagesMegumi/pg1.html">
-        <img src="images/megumi.jpg">
-        <span>Megumi Fushiguro</span></a>
-
-        <a href="pagesNobara/pg1.html">
-        <img src="images/nobara.jpg">
-        <span>Nobara Kugisaki</span></a>
-
-    </div>
-
-</div>
-
+  <canvas id="particulas" aria-hidden="true"></canvas>
+  <main class="container" id="conteudo-principal">
+    <header class="card home-intro">
+      <h1>Entre maldições</h1>
+      <p>Escolha um personagem para conhecer seu perfil, história e as razões que o tornam inesquecível.</p>
+    </header>
+    <section class="home-grid" aria-label="Perfis dos personagens">
+      <a class="home-character" href="pages/pg1.html"><img src="images/Itadori1.jpg" alt="" width="76" height="76"><span><strong>Yuji Itadori</strong><small>Coragem, empatia e força</small></span></a>
+      <a class="home-character" href="pagesMegumi/pg1.html"><img src="images/megumi.jpg" alt="" width="76" height="76"><span><strong>Megumi Fushiguro</strong><small>A Técnica das Dez Sombras</small></span></a>
+      <a class="home-character" href="pagesNobara/pg1.html"><img src="images/nobara.jpg" alt="" width="76" height="76"><span><strong>Nobara Kugisaki</strong><small>Autenticidade e determinação</small></span></a>
+      <a class="home-character" href="pages/gojo.html"><img src="images/gojo.jpg" alt="" width="76" height="76"><span><strong>Satoru Gojo</strong><small>O feiticeiro mais forte</small></span></a>
+      <a class="home-character" href="pages/geto.html"><span class="character-initial" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5 0-9 2.5-9 5.5V22h18v-2.5C21 16.5 17 14 12 14Z"/></svg></span><span><strong>Suguru Geto</strong><small>Perfil sem foto</small></span></a>
+    </section>
+    <footer class="rodape"><p>&copy; 2026 Criado por <strong>Flaviano</strong></p></footer>
+  </main>
 </body>
 </html>
