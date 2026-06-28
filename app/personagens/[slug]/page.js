@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import CharacterProfile from "@/components/CharacterProfile";
-import Sidebar from "@/components/Sidebar";
 import { characters, getCharacter } from "@/lib/characters";
 
 export function generateStaticParams() {
@@ -18,8 +17,7 @@ export default async function CharacterPage({ params }) {
   const character = getCharacter(slug);
   if (!character) notFound();
   return (
-    <div className="shell">
-      <Sidebar current={slug} />
+    <div className="shell noSidebar">
       <main className="main profileMain">
         <CharacterProfile character={character} />
         <article className="story"><span className="eyebrow">Sobre o personagem</span><h2>{character.name}</h2><p>{character.story}</p></article>

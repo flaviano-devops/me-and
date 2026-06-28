@@ -1,12 +1,10 @@
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
-import Sidebar from "@/components/Sidebar";
 import { characters } from "@/lib/characters";
 
 export default function HomePage() {
   return (
-    <div className="shell">
-      <Sidebar />
+    <div className="shell noSidebar">
       <main className="main">
         <header className="intro">
           <span className="eyebrow">Jujutsu Kaisen</span>
