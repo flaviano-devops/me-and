@@ -18,12 +18,14 @@ const relativeTime = (date) => {
 
 function RoomRow({ room }) {
   const peerCharacter = getCharacter(room.peer?.character_slug);
-  const lastSpeaker = getCharacter(room.last?.character_slug);
   const isPrivate = !room.is_public;
-  const avatar = isPrivate ? peerCharacter : lastSpeaker;
   const title = isPrivate ? (peerCharacter?.name || "Conversa privada") : room.title;
   return <Link className={`roomRow ${isPrivate ? "privateRoom" : ""}`} href={`/chats/${room.id}`}>
-    <span className="roomThumb"><Avatar src={avatar?.avatar} name={avatar?.name || title} size={72}/><i className={isPrivate ? "privateIndicator" : ""}/></span>
+    <span className={`roomThumb ${isPrivate ? "privateThumb" : "groupThumb"}`}>
+      {isPrivate
+        ? <Avatar src={peerCharacter?.avatar} name={peerCharacter?.name || title} size={72}/>
+        : <Image className="roomCoverImage" src={room.image_url || "/images/chat-cover.jpg"} alt={`Capa do chat ${title}`} fill sizes="72px" unoptimized={Boolean(room.image_url?.startsWith("http"))}/>}<i className={isPrivate ? "privateIndicator" : ""}/>
+    </span>
     <span className="roomText"><strong>{title}</strong><small>{room.last?.body || room.description || "Conversa começando..."}</small><em>{isPrivate ? "Chat privado · somente vocês" : "Chat público"}</em></span>
     <time>{relativeTime(room.last?.created_at)}</time>
   </Link>;
@@ -34,6 +36,8 @@ export default function ChatsList() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const [creatingRoom, setCreatingRoom] = useState(false);
+  const [roomImagePreview, setRoomImagePreview] = useState("");
   const [message, setMessage] = useState("");
   const supabase = getSupabaseBrowserClient();
 
@@ -65,11 +69,27 @@ export default function ChatsList() {
 
   const createRoom = async (event) => {
     event.preventDefault();
+    if (creatingRoom || !profile) return;
     const fields = new FormData(event.currentTarget);
+    const imageFile = fields.get("image");
+    if (!imageFile?.size) return setMessage("Escolha uma imagem quadrada para representar o chat em grupo.");
+    setCreatingRoom(true);
+    setMessage("Enviando a capa do chat...");
+    const extension = imageFile.name.split(".").pop()?.toLowerCase() || "jpg";
+    const imagePath = `chats/${profile.user_id}/room-${Date.now()}.${extension}`;
+    const { error: uploadError } = await supabase.storage.from("profile-media").upload(imagePath, imageFile, { contentType: imageFile.type, upsert: false });
+    if (uploadError) { setCreatingRoom(false); return setMessage(uploadError.message); }
+    const imageUrl = supabase.storage.from("profile-media").getPublicUrl(imagePath).data.publicUrl;
     setMessage("Criando sala pública...");
-    const { data, error } = await supabase.rpc("create_chat_room", { room_title: fields.get("title"), room_description: fields.get("description") });
-    if (error) return setMessage(error.message);
+    const { data, error } = await supabase.rpc("create_chat_room", { room_title: fields.get("title"), room_description: fields.get("description"), room_image_url: imageUrl });
+    if (error) { setCreatingRoom(false); return setMessage(error.message); }
     window.location.assign(`/chats/${data}`);
+  };
+
+  const selectRoomImage = (event) => {
+    const file = event.target.files?.[0];
+    if (roomImagePreview) URL.revokeObjectURL(roomImagePreview);
+    setRoomImagePreview(file ? URL.createObjectURL(file) : "");
   };
 
   const privateRooms = rooms.filter((room) => !room.is_public);
@@ -86,7 +106,13 @@ export default function ChatsList() {
         {characters.map((character) => <Link href={`/personagens/${character.slug}`} key={character.slug}><Avatar src={character.avatar} name={character.name} size={66}/><span>{character.name.split(" ")[0]}</span></Link>)}
       </section>
       {profile && <div className="activeIdentity">Você está falando como <strong>{getCharacter(profile.selected_character_slug)?.name}</strong><Link href="/conta">Gerenciar na conta</Link></div>}
-      {creating && <form className="createRoom" onSubmit={createRoom}><h2>Criar chat público</h2><p>Qualquer membro poderá entrar e participar.</p><input name="title" minLength="3" maxLength="60" placeholder="Nome da sala" required/><textarea name="description" maxLength="180" placeholder="Sobre o que vocês vão conversar?"/><div><button type="button" onClick={() => setCreating(false)}>Cancelar</button><button type="submit">Criar sala</button></div></form>}
+      {creating && <form className="createRoom" onSubmit={createRoom}>
+        <div className="createRoomHeading"><span className="createRoomPreview">{roomImagePreview ? <Image src={roomImagePreview} alt="Prévia da capa" fill sizes="72px" unoptimized/> : <span aria-hidden="true">＋</span>}</span><span><h2>Criar chat em grupo</h2><p>A capa quadrada identifica a sala na lista de conversas.</p></span></div>
+        <label className="roomImagePicker">Imagem do chat<input name="image" type="file" accept="image/png,image/jpeg,image/webp" onChange={selectRoomImage} required/><small>JPG, PNG ou WebP · até 5 MB</small></label>
+        <label>Nome do grupo<input name="title" minLength="3" maxLength="60" placeholder="Ex.: Clube de teorias" required/></label>
+        <label>Descrição<textarea name="description" maxLength="180" placeholder="Sobre o que vocês vão conversar?"/></label>
+        <div className="createRoomActions"><button type="button" onClick={() => setCreating(false)} disabled={creatingRoom}>Cancelar</button><button type="submit" disabled={creatingRoom}>{creatingRoom ? "Criando..." : "Criar grupo"}</button></div>
+      </form>}
 
       {privateRooms.length > 0 && <section className="rooms privateRooms"><div className="roomsHeading"><span><small>Somente participantes</small><h2>Conversas privadas</h2></span><b>{privateRooms.length}</b></div>{privateRooms.map((room) => <RoomRow room={room} key={room.id}/>)}</section>}
       <section className="rooms publicRooms"><div className="roomsHeading"><span><small>Comunidade</small><h2>Chats públicos</h2></span><b>{publicRooms.length}</b></div>{loading && <p className="roomsEmpty">Carregando conversas...</p>}{!loading && publicRooms.length === 0 && <p className="roomsEmpty">Nenhuma sala pública ainda. Crie a primeira.</p>}{publicRooms.map((room) => <RoomRow room={room} key={room.id}/>)}</section>

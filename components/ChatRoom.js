@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Avatar from "./Avatar";
@@ -12,6 +13,7 @@ export default function ChatRoom({ roomId }) {
   const [peer, setPeer] = useState(null);
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [memberCount, setMemberCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("");
   const endRef = useRef(null);
@@ -43,6 +45,7 @@ export default function ChatRoom({ roomId }) {
         members = [...(members || []), { user_id: auth.user.id, character_slug: memberProfile.selected_character_slug }];
       }
       if (!roomData.is_public && !alreadyMember) { setLoading(false); return setStatus("Você não participa desta conversa privada."); }
+      setMemberCount((members || []).length);
 
       const peerMember = (members || []).find((member) => member.user_id !== auth.user.id);
       if (peerMember) {
@@ -81,7 +84,14 @@ export default function ChatRoom({ roomId }) {
 
   return (
     <main className={`chatRoomPage ${isPrivate ? "privateChatPage" : ""}`}>
-      <header className="chatHeader"><Link href="/chats" aria-label="Voltar aos chats">‹</Link><div><h1>{roomTitle || "Carregando chat..."}</h1><span>{isPrivate ? "Chat privado · somente vocês" : "Chat público · tempo real"}</span></div>{(isPrivate ? peer : selectedCharacter) && <Avatar src={(isPrivate ? peer : selectedCharacter).avatar} name={(isPrivate ? peer : selectedCharacter).name} size={46}/>}</header>
+      <header className="chatHeader">
+        <Link href="/chats" aria-label="Voltar aos chats">‹</Link>
+        {isPrivate
+          ? <Avatar src={peer?.avatar} name={peer?.name || "Conversa privada"} size={46}/>
+          : room && <span className="groupHeaderAvatar"><Image src={room.image_url || "/images/chat-cover.jpg"} alt={`Capa de ${room.title}`} fill sizes="46px" unoptimized={Boolean(room.image_url?.startsWith("http"))}/></span>}
+        <div><h1>{roomTitle || "Carregando chat..."}</h1><span>{isPrivate ? "Privado · somente vocês" : `Grupo público · ${memberCount} ${memberCount === 1 ? "participante" : "participantes"}`}</span></div>
+        <span className="chatHeaderStatus" title="Conversa em tempo real" aria-label="Conversa em tempo real"><i/></span>
+      </header>
       <section className="messageList" aria-live="polite" aria-busy={loading}>
         {loading && <p className="chatEmpty">Carregando conversa...</p>}
         {!loading && messages.length === 0 && <p className="chatEmpty">Ainda não há mensagens. Comece a conversa.</p>}
