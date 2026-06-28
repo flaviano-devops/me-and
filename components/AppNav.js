@@ -9,7 +9,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 const items = [
   { href: "/", label: "Início", icon: "home" },
-  { href: "/#personagens", label: "Personagens", icon: "people" },
+  { href: "/personagens", label: "Personagens", icon: "people" },
   { href: "/chats", label: "Chats", icon: "chat" },
   { href: "/conta", label: "Conta", icon: "user" }
 ];
