@@ -222,6 +222,8 @@ h1,h2,p { text-wrap:balance; }
 .groupHeaderAvatar img { object-fit:cover; }
 .chatHeaderStatus { width:24px; height:24px; display:grid; place-items:center; border:1px solid var(--border); border-radius:50%; }
 .chatHeaderStatus i { width:8px; height:8px; border-radius:50%; background:#30c85a; box-shadow:0 0 0 3px rgba(48,200,90,.18); }
+.chatHeaderStatus.connecting i,.chatHeaderStatus.reconnecting i { background:#f0a42b; box-shadow:0 0 0 3px rgba(240,164,43,.18); animation:connectionPulse 1.2s ease-in-out infinite; }
+@keyframes connectionPulse { 50% { opacity:.38; } }
 .messageList { padding:22px; overflow-y:auto; background:var(--bg); }
 .chatEmpty { display:grid; min-height:100%; place-items:center; margin:0; color:var(--muted); text-align:center; }
 .message { display:flex; align-items:flex-start; gap:10px; margin-bottom:17px; }
@@ -230,12 +232,17 @@ h1,h2,p { text-wrap:balance; }
 .message strong { display:block; margin:0 0 3px; color:var(--muted); font-size:.75rem; }
 .message p { margin:0; padding:10px 13px; border-radius:5px 15px 15px 15px; background:var(--panel2); }
 .message.own p { border-radius:15px 5px 15px 15px; background:var(--red); color:#fff; }
+.message.pending { opacity:.72; }
+.message.failed p { outline:1px solid #ff8d96; }
+.message.failed time { color:#ff8d96; font-weight:750; }
 .message time { display:block; margin-top:3px; color:#777; font-size:.68rem; text-align:right; }
 .messageComposer { display:grid; grid-template-columns:42px 1fr 44px; gap:9px; align-items:center; padding:11px 16px max(11px,env(safe-area-inset-bottom)); border-top:1px solid var(--border); background:var(--panel); }
 .messageComposer input { min-width:0; padding:12px 14px; border:1px solid var(--border); border-radius:999px; background:var(--panel2); color:var(--text); }
+.messageComposer input:focus,.messageComposer input:focus-visible { outline:0; border-color:var(--red); box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 24%,transparent); }
 .messageComposer button { width:42px; height:42px; border:0; border-radius:50%; background:var(--red); color:#fff; cursor:pointer; }
 .messageComposer input:disabled,.messageComposer button:disabled { opacity:.45; cursor:not-allowed; }
 .chatStatus { margin:0; padding:5px 16px; color:#ffb7bd; text-align:center; font-size:.75rem; }
+body:has(.chatRoomPage) { overflow:hidden; }
 .profileSocial { padding:18px 26px; border-top:1px solid rgba(255,255,255,.09); }
 .profileOwnerSummary { display:flex; align-items:center; gap:11px; margin-bottom:14px; }
 .profileOwnerSummary span,.profileOwnerSummary small,.profileOwnerSummary strong,.profileOwnerSummary em { min-width:0; display:block; }
@@ -376,7 +383,12 @@ h1,h2,p { text-wrap:balance; }
 @media (max-width:700px) { .accountPage { width:min(100% - 24px,980px); padding-top:74px; } .identityCard { grid-template-columns:1fr; justify-items:center; padding:22px; text-align:center; } .identityActions { justify-content:center; } .accountGrid { grid-template-columns:1fr; } .accountCard dl>div { grid-template-columns:1fr; gap:2px; } }
 @media (max-width:620px) { .homePage,.directoryPage { width:min(100% - 24px,1120px); padding-top:74px; } .homeHero { padding:25px 20px; } .homeStats { grid-template-columns:1fr; } .homeStats div,.homeStats div:first-child { border-top:1px solid var(--border); border-left:0; } .homeStats div:first-child { border-top:0; } .quickGrid { grid-template-columns:1fr; } .quickGrid>a:last-child { grid-column:auto; } .directoryTools { padding:13px; } .directoryFilters { display:grid; grid-template-columns:1fr 1fr; } .directoryResultSummary small { display:none; } .directoryCardBody>p { min-height:0; } }
 @media (max-width:520px) { .profileSocialButtons { flex-direction:column; } .firstMessageCard>div:last-child { flex-direction:column-reverse; } .firstMessageCard button { width:100%; } .activeIdentity { flex-wrap:wrap; } .activeIdentity a { width:100%; margin-left:0; } }
-@media (max-width:950px) { body:has(.chatsPage) .themeToggle,body:has(.chatRoomPage) .themeToggle { display:none; } .chatRoomPage { height:calc(100dvh - 68px); } }
+@media (max-width:950px) {
+  body:has(.chatsPage) .themeToggle,body:has(.chatRoomPage) .themeToggle { display:none; }
+  .chatRoomPage { position:fixed; inset:0 0 68px; width:100%; max-width:none; height:auto; }
+  body:has(.messageComposer input:focus) .appNav { display:none; }
+  body:has(.messageComposer input:focus) .chatRoomPage { bottom:0; }
+}
 @media (max-width:620px) {
   .chatsPage { width:100%; box-shadow:none; }
   .chatsHero { height:168px; padding:18px 16px; }

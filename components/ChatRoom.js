@@ -15,6 +15,7 @@ export default function ChatRoom({ roomId }) {
   const [messages, setMessages] = useState([]);
   const [memberCount, setMemberCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [connectionState, setConnectionState] = useState("connecting");
   const [status, setStatus] = useState("");
   const endRef = useRef(null);
   const supabase = getSupabaseBrowserClient();
@@ -22,6 +23,12 @@ export default function ChatRoom({ roomId }) {
   useEffect(() => {
     if (!supabase) return;
     let channel;
+    let refreshTimer;
+    const mergeMessages = (incoming) => setMessages((current) => {
+      const byId = new Map(current.map((item) => [String(item.id), item]));
+      incoming.forEach((item) => byId.set(String(item.id), item));
+      return [...byId.values()].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    });
     const start = async () => {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) return window.location.assign("/admin");
@@ -59,11 +66,16 @@ export default function ChatRoom({ roomId }) {
       setLoading(false);
 
       channel = supabase.channel(`room-${roomId}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_messages", filter: `room_id=eq.${roomId}` }, (payload) => {
-        setMessages((current) => current.some((item) => item.id === payload.new.id) ? current : [...current, payload.new]);
-      }).subscribe();
+        mergeMessages([payload.new]);
+      }).subscribe((state) => setConnectionState(state === "SUBSCRIBED" ? "online" : state === "CHANNEL_ERROR" || state === "TIMED_OUT" ? "reconnecting" : "connecting"));
+
+      refreshTimer = window.setInterval(async () => {
+        const { data: recent } = await supabase.from("chat_messages").select("*").eq("room_id", roomId).order("created_at", { ascending: false }).limit(50);
+        if (recent?.length) mergeMessages(recent);
+      }, 5000);
     };
     start();
-    return () => { if (channel) supabase.removeChannel(channel); };
+    return () => { if (channel) supabase.removeChannel(channel); if (refreshTimer) window.clearInterval(refreshTimer); };
   }, [roomId, supabase]);
 
   useEffect(() => endRef.current?.scrollIntoView({ behavior: "smooth" }), [messages]);
@@ -74,8 +86,17 @@ export default function ChatRoom({ roomId }) {
     const body = input.value.trim();
     if (!body || !user || !profile) return;
     input.value = "";
-    const { error } = await supabase.from("chat_messages").insert({ room_id: roomId, user_id: user.id, character_slug: profile.selected_character_slug, body });
-    if (error) { setStatus(error.message); input.value = body; }
+    input.focus();
+    const optimisticId = `pending-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const optimisticMessage = { id: optimisticId, room_id: roomId, user_id: user.id, character_slug: profile.selected_character_slug, body, created_at: new Date().toISOString(), pending: true };
+    setMessages((current) => [...current, optimisticMessage]);
+    setStatus("");
+    const { data: savedMessage, error } = await supabase.from("chat_messages").insert({ room_id: roomId, user_id: user.id, character_slug: profile.selected_character_slug, body }).select("*").single();
+    if (error) {
+      setMessages((current) => current.map((item) => item.id === optimisticId ? { ...item, pending: false, failed: true } : item));
+      return setStatus("A mensagem não foi enviada. Verifique sua conexão e tente novamente.");
+    }
+    setMessages((current) => [...current.filter((item) => item.id !== optimisticId && String(item.id) !== String(savedMessage.id)), savedMessage].sort((a, b) => new Date(a.created_at) - new Date(b.created_at)));
   };
 
   const selectedCharacter = profile ? getCharacter(profile.selected_character_slug) : null;
@@ -90,7 +111,7 @@ export default function ChatRoom({ roomId }) {
           ? <Avatar src={peer?.avatar} name={peer?.name || "Conversa privada"} size={46}/>
           : room && <span className="groupHeaderAvatar"><Image src={room.image_url || "/images/chat-cover.jpg"} alt={`Capa de ${room.title}`} fill sizes="46px" unoptimized={Boolean(room.image_url?.startsWith("http"))}/></span>}
         <div><h1>{roomTitle || "Carregando chat..."}</h1><span>{isPrivate ? "Privado · somente vocês" : `Grupo público · ${memberCount} ${memberCount === 1 ? "participante" : "participantes"}`}</span></div>
-        <span className="chatHeaderStatus" title="Conversa em tempo real" aria-label="Conversa em tempo real"><i/></span>
+        <span className={`chatHeaderStatus ${connectionState}`} title={connectionState === "online" ? "Conversa em tempo real" : "Reconectando"} aria-label={connectionState === "online" ? "Conversa em tempo real" : "Reconectando"}><i/></span>
       </header>
       <section className="messageList" aria-live="polite" aria-busy={loading}>
         {loading && <p className="chatEmpty">Carregando conversa...</p>}
@@ -98,7 +119,7 @@ export default function ChatRoom({ roomId }) {
         {messages.map((message) => {
           const character = getCharacter(message.character_slug);
           const own = message.user_id === user?.id;
-          return <article className={own ? "message own" : "message"} key={message.id}><Avatar src={character?.avatar} name={character?.name || "Personagem"} size={42}/><div><strong>{own ? `Você · ${character?.name || "Personagem"}` : character?.name || "Personagem"}</strong><p>{message.body}</p><time>{new Date(message.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</time></div></article>;
+          return <article className={`${own ? "message own" : "message"}${message.pending ? " pending" : ""}${message.failed ? " failed" : ""}`} key={message.id}><Avatar src={character?.avatar} name={character?.name || "Personagem"} size={42}/><div><strong>{own ? `Você · ${character?.name || "Personagem"}` : character?.name || "Personagem"}</strong><p>{message.body}</p><time>{message.pending ? "Enviando..." : message.failed ? "Não enviada" : new Date(message.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</time></div></article>;
         })}
         <div ref={endRef}/>
       </section>
