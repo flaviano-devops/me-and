@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import Avatar from "./Avatar";
 import ProfileEditor from "./ProfileEditor";
@@ -26,6 +27,23 @@ export default function CharacterProfile({ character }) {
           <div key={stat}><strong>{stat}</strong><span>{["Reputação", "Seguidores", "Visitantes"][index]}</span></div>
         ))}
       </div>
+      {profile.gallery?.length > 0 && (
+        <section className="profileGallery" aria-labelledby="profile-gallery-title">
+          <h2 id="profile-gallery-title">Galeria</h2>
+          <div>
+            {profile.gallery.map((image, index) => (
+              <Image
+                src={image}
+                alt={`${profile.name} — imagem ${index + 1} da galeria`}
+                width={240}
+                height={240}
+                sizes="(max-width: 620px) 42vw, 180px"
+                key={image}
+              />
+            ))}
+          </div>
+        </section>
+      )}
       <Link className="bio" href={`/personagens/${character.slug}/bio`}><span><h2>Bio</h2><p>{profile.bio}</p></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></Link>
       <ProfileSocialActions characterSlug={character.slug} />
     </section>

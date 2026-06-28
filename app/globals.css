@@ -66,6 +66,10 @@ h1,h2,p { text-wrap:balance; }
 .stats strong,.stats span { display:block; }
 .stats strong { font-size:1.45rem; line-height:1.1; }
 .stats span { color:var(--muted); font-size:.78rem; }
+.profileGallery { padding:20px 26px 24px; border-top:1px solid var(--border); }
+.profileGallery h2 { margin:0 0 12px; font-size:1.05rem; }
+.profileGallery>div { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.profileGallery img { width:100%; height:auto; aspect-ratio:1; border:1px solid var(--border); border-radius:12px; object-fit:cover; background:var(--panel2); }
 .bio { display:grid; grid-template-columns:1fr 24px; align-items:center; padding:22px 26px; border-top:1px solid rgba(255,52,69,.25); color:var(--text); text-decoration:none; }
 .bio h2 { margin:0 0 5px; font-size:1.05rem; }
 .bio p { margin:0; color:var(--muted); }
@@ -214,4 +218,5 @@ h1,h2,p { text-wrap:balance; }
 @media (max-width:720px) { .loginPage { grid-template-columns:1fr; gap:8px; padding:30px 0; }.loginVisual{padding:20px}.loginVisual h1{font-size:2.8rem}.loginCard{padding:24px} }
 @media (max-width:800px) { .bioBlockEditor { grid-template-columns:1fr; }.bioBlockEditor strong{color:var(--red)} }
 @media (max-width:620px) { .characterGrid { grid-template-columns:1fr; } .characterCard { min-height:104px; grid-template-columns:60px 1fr 22px; } .characterCard .avatarImage,.characterCard .emptyAvatar { width:60px!important; height:60px!important; } .cover { min-height:360px; } .formGrid { grid-template-columns:1fr; } .formGrid .full { grid-column:auto; } .stats strong { font-size:1.15rem; } .selectGrid { grid-template-columns:1fr 1fr; } .chatsHero { height:175px; padding:20px; } .chatsHero button { padding:9px 13px; } .roomRow { grid-template-columns:66px 1fr; padding-inline:14px; } .roomThumb { width:62px; height:62px; } .roomRow time { display:none; } }
+@media (max-width:620px) { .profileGallery>div { grid-template-columns:repeat(2,1fr); } }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
