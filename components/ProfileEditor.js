@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
@@ -19,12 +18,18 @@ export default function ProfileEditor({ character, onChange }) {
   const supabase = getSupabaseBrowserClient();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [canEdit, setCanEdit] = useState(false);
   const [form, setForm] = useState(character);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (!supabase) return;
-    supabase.auth.getUser().then(({ data }) => setUser(data.user || null));
+    supabase.auth.getUser().then(async ({ data }) => {
+      setUser(data.user || null);
+      if (!data.user) return;
+      const { data: membership } = await supabase.from("member_profiles").select("selected_character_slug").eq("user_id", data.user.id).maybeSingle();
+      setCanEdit(membership?.selected_character_slug === character.slug);
+    });
     supabase.from("character_profiles").select("*").eq("slug", character.slug).maybeSingle()
       .then(({ data }) => {
         if (!data) return;
@@ -92,7 +97,7 @@ export default function ProfileEditor({ character, onChange }) {
   };
 
   if (!supabase) return <p className="editorNotice">Supabase não configurado.</p>;
-  if (!user) return <Link className="editButton" href="/admin">Entrar para editar</Link>;
+  if (!user || !canEdit) return null;
 
   return (
     <>

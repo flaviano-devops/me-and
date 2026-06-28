@@ -13,7 +13,7 @@ export default function HomePage() {
           <h1>Entre maldições</h1>
           <p>Escolha um personagem para conhecer seu perfil, sua história e o que o torna inesquecível.</p>
         </header>
-        <section className="characterGrid" aria-label="Perfis dos personagens">
+        <section className="characterGrid" id="personagens" aria-label="Perfis dos personagens">
           {characters.map((character) => (
             <Link className="characterCard" href={`/personagens/${character.slug}`} key={character.slug}>
               <Avatar src={character.avatar} name={character.name} size={74} />

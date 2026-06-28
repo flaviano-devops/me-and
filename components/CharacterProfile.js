@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import Link from "next/link";
 import Avatar from "./Avatar";
 import ProfileEditor from "./ProfileEditor";
+import ProfileSocialActions from "./ProfileSocialActions";
 
 export default function CharacterProfile({ character }) {
   const [profile, setProfile] = useState(character);
@@ -24,7 +26,8 @@ export default function CharacterProfile({ character }) {
           <div key={stat}><strong>{stat}</strong><span>{["Reputação", "Seguidores", "Visitantes"][index]}</span></div>
         ))}
       </div>
-      <div className="bio"><h2>Bio</h2><p>{profile.bio}</p></div>
+      <Link className="bio" href={`/personagens/${character.slug}/bio`}><span><h2>Bio</h2><p>{profile.bio}</p></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></Link>
+      <ProfileSocialActions characterSlug={character.slug} />
     </section>
   );
 }

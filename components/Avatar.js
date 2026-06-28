@@ -14,5 +14,6 @@ export function EmptyAvatar({ size = 64 }) {
 export default function Avatar({ src, name, size = 64, priority = false }) {
   const [failed, setFailed] = useState(false);
   if (!src || failed) return <EmptyAvatar size={size} />;
-  return <Image className="avatarImage" src={src} alt={`Foto de perfil de ${name}`} width={size} height={size} priority={priority} onError={() => setFailed(true)} />;
+  const external = src.startsWith("http") || src.startsWith("data:");
+  return <Image className="avatarImage" src={src} alt={`Foto de perfil de ${name}`} width={size} height={size} priority={priority} unoptimized={external} onError={() => setFailed(true)} />;
 }

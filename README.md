@@ -35,7 +35,9 @@ npm start
 
 ## Supabase
 
-Neste momento, as edições dos perfis ficam no `localStorage` do navegador. Na próxima etapa, os dados podem ser migrados para tabelas do Supabase e as imagens para o Supabase Storage.
+O projeto usa Supabase para autenticação por e-mail/senha, seleção exclusiva de personagens, perfis, seguidores, Storage e chats em tempo real.
+
+Execute, na ordem, os arquivos da pasta `supabase/migrations` no SQL Editor do Supabase. Em **Authentication → URL Configuration**, configure a URL da Vercel como Site URL. O cadastro por e-mail pode exigir confirmação conforme a opção **Confirm email** do projeto.
 
 ## Rotas
 
@@ -45,3 +47,6 @@ Neste momento, as edições dos perfis ficam no `localStorage` do navegador. Na 
 - `/personagens/nobara`
 - `/personagens/gojo`
 - `/personagens/geto`
+- `/admin` — login e cadastro
+- `/escolher-personagem` — seleção exclusiva
+- `/chats` — salas públicas e privadas
