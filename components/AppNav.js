@@ -24,6 +24,7 @@ function Icon({ name }) {
 
 export default function AppNav() {
   const pathname = usePathname();
+  if (pathname === "/admin") return null;
   return (
     <nav className="appNav" aria-label="Navegação principal">
       <Link className="appBrand" href="/" aria-label="Entre Maldições"><span>呪</span></Link>

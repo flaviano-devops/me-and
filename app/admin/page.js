@@ -16,10 +16,16 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!supabase) return;
-    supabase.auth.getUser().then(({ data }) => setUser(data.user || null));
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user || null);
+      if (data.user) {
+        const requested = new URLSearchParams(window.location.search).get("retorno");
+        if (requested?.startsWith("/")) router.replace(requested);
+      }
+    });
     const { data } = supabase.auth.onAuthStateChange((_event, session) => setUser(session?.user || null));
     return () => data.subscription.unsubscribe();
-  }, [supabase]);
+  }, [router, supabase]);
 
   const submit = async (event) => {
     event.preventDefault();
