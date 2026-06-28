@@ -182,6 +182,17 @@ h1,h2,p { text-wrap:balance; }
 .bioImage figcaption { margin-top:8px; color:#aaa; }
 .bioFacts { width:min(100%,600px); margin:40px auto; }
 .bioFacts div { display:grid; grid-template-columns:1fr 1.5fr; gap:18px; padding:9px 0; border-bottom:1px solid #333; }.bioFacts dt{font-weight:900}.bioFacts dd{margin:0}
+.bioEditToggle { margin-top:14px; padding:9px 15px; border:1px solid var(--border); border-radius:8px; background:var(--panel2); color:var(--text); font-weight:900; cursor:pointer; }
+.bioEditor { padding:22px; border:1px solid var(--border); background:var(--panel); }
+.bioToolbar { display:flex; flex-wrap:wrap; gap:8px; }
+.bioToolbar button,.bioToolbar label,.saveBiography { padding:9px 13px; border:1px solid var(--border); border-radius:8px; background:var(--panel2); color:var(--text); font-weight:800; cursor:pointer; }
+.bioToolbar input { position:absolute; width:1px; height:1px; overflow:hidden; opacity:0; }
+.bioBlockList { display:grid; gap:10px; margin:18px 0; }
+.bioBlockEditor { display:grid; grid-template-columns:90px 1fr 150px 120px auto; gap:8px; align-items:center; padding:10px; border:1px solid var(--border); border-radius:9px; }
+.bioBlockEditor textarea,.bioBlockEditor input,.bioBlockEditor select { min-width:0; padding:8px; border:1px solid var(--border); border-radius:7px; background:var(--bg); color:var(--text); }
+.bioBlockEditor button { padding:8px; border:1px solid var(--border); border-radius:7px; background:transparent; color:var(--text); cursor:pointer; }
+.saveBiography { background:var(--red); color:#fff; }
+.bioStatus { margin:0; padding:10px; background:var(--panel2); text-align:center; }
 [data-theme="light"] .biographyPage>article { background:#fff; color:#111; border:1px solid #ddd; }
 [data-theme="light"] .messageList { background:#f6f6f6; }
 .story { margin-top:18px; padding:28px; border:1px solid var(--border); border-radius:18px; background:var(--panel); }
@@ -194,5 +205,6 @@ h1,h2,p { text-wrap:balance; }
 .notFound a { padding:11px 18px; border:1px solid var(--border); border-radius:9px; text-decoration:none; }
 @media (max-width:950px) { body { padding-left:0; padding-bottom:68px; } .appNav { inset:auto 0 0 0; width:100%; height:68px; flex-direction:row; justify-content:center; padding:6px 10px; border-top:1px solid var(--border); border-right:0; } .appBrand,.futureNav { display:none; } .appNavItems { display:flex; justify-content:space-around; width:min(100%,560px); gap:3px; } .appNavItems a { flex:1; min-height:54px; } .themeToggle { top:12px; right:12px; width:44px; height:44px; } .shell { width:100%; display:block; } .sidebar { position:sticky; z-index:10; top:0; width:100%; margin:0; padding:9px 62px 9px 12px; overflow-x:auto; border-width:0 0 1px; border-radius:0; } .sidebar h2 { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); } .sidebar nav { display:flex; width:max-content; } .sidebar nav>ul { display:flex; margin:0; } .sidebar a { min-height:46px; grid-template-columns:34px auto; } .sidebar .homeLink { margin:0 6px 0 0; border:1px solid transparent; border-radius:12px; } .sidebar .avatarImage,.sidebar .emptyAvatar { width:34px!important; height:34px!important; } .main { padding:28px 16px 40px; } }
 @media (max-width:720px) { .loginPage { grid-template-columns:1fr; gap:8px; padding:30px 0; }.loginVisual{padding:20px}.loginVisual h1{font-size:2.8rem}.loginCard{padding:24px} }
+@media (max-width:800px) { .bioBlockEditor { grid-template-columns:1fr; }.bioBlockEditor strong{color:var(--red)} }
 @media (max-width:620px) { .characterGrid { grid-template-columns:1fr; } .characterCard { min-height:104px; grid-template-columns:60px 1fr 22px; } .characterCard .avatarImage,.characterCard .emptyAvatar { width:60px!important; height:60px!important; } .cover { min-height:360px; } .formGrid { grid-template-columns:1fr; } .formGrid .full { grid-column:auto; } .stats strong { font-size:1.15rem; } .selectGrid { grid-template-columns:1fr 1fr; } .chatsHero { height:175px; padding:20px; } .chatsHero button { padding:9px 13px; } .roomRow { grid-template-columns:66px 1fr; padding-inline:14px; } .roomThumb { width:62px; height:62px; } .roomRow time { display:none; } }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
