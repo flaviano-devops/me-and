@@ -177,26 +177,38 @@ h1,h2,p { text-wrap:balance; }
 .activeIdentity a { margin-left:auto; color:var(--red); font-weight:800; }
 .createRoom { margin:18px 22px; padding:18px; display:grid; gap:10px; border:1px solid var(--border); border-radius:14px; background:var(--panel2); }
 .createRoom h2 { margin:0; }
+.createRoom p { margin:-7px 0 2px; color:var(--muted); font-size:.78rem; }
 .createRoom input,.createRoom textarea { padding:11px; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); }
 .createRoom div { display:flex; justify-content:flex-end; gap:8px; }
 .createRoom button { padding:8px 13px; border:1px solid var(--border); border-radius:8px; background:var(--panel); color:var(--text); cursor:pointer; }
-.rooms>h2 { margin:22px; }
+.roomsHeading { display:flex; align-items:center; justify-content:space-between; padding:22px 22px 10px; }
+.roomsHeading small { color:var(--red); font-size:.67rem; font-weight:900; letter-spacing:.1em; text-transform:uppercase; }
+.roomsHeading h2 { margin:0; font-size:1.35rem; }
+.roomsHeading b { min-width:30px; padding:3px 9px; border-radius:999px; background:var(--panel2); color:var(--muted); text-align:center; font-size:.75rem; }
+.privateRooms { padding-bottom:8px; border-bottom:1px solid var(--border); background:color-mix(in srgb,var(--red) 3%,var(--panel)); }
+.roomsEmpty { margin:0; padding:20px 22px 28px; color:var(--muted); }
 .roomRow { min-height:118px; display:grid; grid-template-columns:78px 1fr auto; align-items:center; gap:14px; padding:14px 22px; border-top:1px solid rgba(255,255,255,.09); text-decoration:none; }
 .roomRow:hover { background:var(--panel2); }
 .roomThumb { position:relative; width:72px; height:72px; display:grid; place-items:center; border:1px solid var(--border); background:var(--panel2); font-size:2rem; }
 .roomThumb .avatarImage,.roomThumb .emptyAvatar { border-radius:0; }
 .roomThumb i { position:absolute; top:-5px; right:-5px; width:18px; height:18px; border:2px solid var(--panel); border-radius:50%; background:#ed2639; }
+.roomThumb i.privateIndicator { width:21px; height:21px; background:var(--red); }
+.roomThumb i.privateIndicator::after { content:""; position:absolute; inset:5px 6px; border:2px solid #fff; border-top:0; border-radius:1px; }
+.roomThumb i.privateIndicator::before { content:""; position:absolute; top:2px; left:6px; width:6px; height:7px; border:2px solid #fff; border-bottom:0; border-radius:6px 6px 0 0; }
 .roomText strong,.roomText small,.roomText em { display:block; }
 .roomText strong { font-size:1.2rem; }
 .roomText small { color:var(--text); font-size:1rem; }
 .roomText em { color:var(--muted); font-size:.75rem; font-style:normal; }
 .roomRow time { align-self:start; color:var(--muted); font-size:.8rem; }
+.privateRoom .roomText em { color:var(--red); font-weight:750; }
+.chatListStatus { margin:16px 22px 0; padding:10px 12px; border:1px solid var(--border); border-radius:9px; background:var(--panel2); }
 .chatRoomPage { width:min(100%,820px); height:100vh; margin:auto; display:grid; grid-template-rows:auto 1fr auto auto; background:var(--panel); box-shadow:var(--shadow); }
 .chatHeader { min-height:76px; display:grid; grid-template-columns:44px 1fr 48px; align-items:center; gap:10px; padding:11px 18px; border-bottom:1px solid rgba(255,255,255,.1); }
 .chatHeader>a { font-size:2.8rem; line-height:1; text-decoration:none; }
 .chatHeader h1 { margin:0; font-size:1.2rem; }
 .chatHeader span { color:var(--muted); font-size:.75rem; }
 .messageList { padding:22px; overflow-y:auto; background:var(--bg); }
+.chatEmpty { display:grid; min-height:100%; place-items:center; margin:0; color:var(--muted); text-align:center; }
 .message { display:flex; align-items:flex-start; gap:10px; margin-bottom:17px; }
 .message.own { flex-direction:row-reverse; }
 .message>div { max-width:min(76%,560px); }
@@ -207,16 +219,30 @@ h1,h2,p { text-wrap:balance; }
 .messageComposer { display:grid; grid-template-columns:42px 1fr 44px; gap:9px; align-items:center; padding:12px 16px; border-top:1px solid rgba(255,255,255,.1); }
 .messageComposer input { min-width:0; padding:12px 14px; border:1px solid var(--border); border-radius:999px; background:var(--panel2); color:var(--text); }
 .messageComposer button { width:42px; height:42px; border:0; border-radius:50%; background:var(--red); color:#fff; cursor:pointer; }
+.messageComposer input:disabled,.messageComposer button:disabled { opacity:.45; cursor:not-allowed; }
 .chatStatus { margin:0; padding:5px 16px; color:#ffb7bd; text-align:center; font-size:.75rem; }
 .profileSocial { padding:18px 26px; border-top:1px solid rgba(255,255,255,.09); }
+.profileOwnerSummary { display:flex; align-items:center; gap:11px; margin-bottom:14px; }
+.profileOwnerSummary span,.profileOwnerSummary small,.profileOwnerSummary strong,.profileOwnerSummary em { min-width:0; display:block; }
+.profileOwnerSummary small { color:var(--red); font-size:.65rem; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
+.profileOwnerSummary strong { font-size:1rem; }
+.profileOwnerSummary em { color:var(--muted); font-size:.75rem; font-style:normal; }
 .profileSocialButtons { display:flex; gap:10px; }
 .profileSocialButtons button { flex:1; padding:11px 16px; border:1px solid var(--border); border-radius:9px; background:var(--panel2); color:var(--text); font-weight:900; cursor:pointer; }
 .profileSocialButtons button:first-child { background:var(--red); color:#fff; }
 .firstMessageCard { margin-top:14px; padding:16px; border:1px solid var(--border); border-radius:12px; background:var(--panel2); }
-.firstMessageCard h3 { margin:0 0 9px; }
+.firstMessageCard .firstMessageHeading { display:flex; align-items:center; justify-content:flex-start; gap:10px; margin:0 0 14px; }
+.firstMessageHeading small { display:block; color:var(--muted); font-size:.68rem; }
+.firstMessageCard h3 { margin:0; }
+.firstMessageCard>label { display:block; margin-bottom:5px; color:var(--muted); font-size:.75rem; font-weight:850; }
 .firstMessageCard textarea { width:100%; min-height:90px; padding:11px; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); resize:vertical; }
-.firstMessageCard div { display:flex; justify-content:flex-end; gap:8px; margin-top:9px; }
+.firstMessageCard .messageCounter { display:block; color:var(--muted); font-size:.68rem; text-align:right; }
+.firstMessageCard>p { margin:3px 0 10px; color:var(--muted); font-size:.72rem; }
+.firstMessageCard>div:last-child { display:flex; justify-content:flex-end; gap:8px; margin-top:9px; }
 .firstMessageCard button { padding:8px 14px; border:1px solid var(--border); border-radius:8px; background:var(--panel); color:var(--text); cursor:pointer; }
+.firstMessageCard button[type=submit] { border-color:var(--red); background:var(--red); color:#fff; }
+.firstMessageCard button:disabled { opacity:.55; cursor:not-allowed; }
+.profileSocialStatus { margin:10px 0 0; padding:8px 10px; border-radius:8px; background:var(--panel2); color:var(--muted); font-size:.75rem; }
 .biographyPage { width:min(100% - 34px,900px); min-height:100vh; margin:auto; padding:60px 0 100px; }
 .biographyPage>header { position:relative; padding:28px; text-align:center; border-bottom:1px solid var(--border); }
 .biographyPage>header>a { position:absolute; left:10px; top:20px; font-size:3rem; line-height:1; text-decoration:none; }
@@ -334,4 +360,5 @@ h1,h2,p { text-wrap:balance; }
 @media (max-width:620px) { .profileGallery>div { grid-template-columns:repeat(2,1fr); } }
 @media (max-width:700px) { .accountPage { width:min(100% - 24px,980px); padding-top:74px; } .identityCard { grid-template-columns:1fr; justify-items:center; padding:22px; text-align:center; } .identityActions { justify-content:center; } .accountGrid { grid-template-columns:1fr; } .accountCard dl>div { grid-template-columns:1fr; gap:2px; } }
 @media (max-width:620px) { .homePage,.directoryPage { width:min(100% - 24px,1120px); padding-top:74px; } .homeHero { padding:25px 20px; } .homeStats { grid-template-columns:1fr; } .homeStats div,.homeStats div:first-child { border-top:1px solid var(--border); border-left:0; } .homeStats div:first-child { border-top:0; } .quickGrid { grid-template-columns:1fr; } .quickGrid>a:last-child { grid-column:auto; } .directoryTools { padding:13px; } .directoryFilters { display:grid; grid-template-columns:1fr 1fr; } .directoryResultSummary small { display:none; } .directoryCardBody>p { min-height:0; } }
+@media (max-width:520px) { .profileSocialButtons { flex-direction:column; } .firstMessageCard>div:last-child { flex-direction:column-reverse; } .firstMessageCard button { width:100%; } .activeIdentity { flex-wrap:wrap; } .activeIdentity a { width:100%; margin-left:0; } }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
