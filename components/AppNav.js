@@ -1,14 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Avatar from "./Avatar";
+import { getCharacter } from "@/lib/characters";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 const items = [
   { href: "/", label: "Início", icon: "home" },
   { href: "/#personagens", label: "Personagens", icon: "people" },
   { href: "/chats", label: "Chats", icon: "chat" },
-  { href: "/escolher-personagem", label: "Identidade", icon: "mask" },
-  { href: "/admin", label: "Conta", icon: "user" }
+  { href: "/conta", label: "Conta", icon: "user" }
 ];
 
 function Icon({ name }) {
@@ -24,6 +27,18 @@ function Icon({ name }) {
 
 export default function AppNav() {
   const pathname = usePathname();
+  const [identity, setIdentity] = useState(null);
+  const supabase = getSupabaseBrowserClient();
+
+  useEffect(() => {
+    if (!supabase || pathname === "/admin") return;
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return setIdentity(null);
+      const { data: member } = await supabase.from("member_profiles").select("selected_character_slug").eq("user_id", data.user.id).maybeSingle();
+      setIdentity(getCharacter(member?.selected_character_slug) || null);
+    });
+  }, [pathname, supabase]);
+
   if (pathname === "/admin") return null;
   return (
     <nav className="appNav" aria-label="Navegação principal">
@@ -35,7 +50,7 @@ export default function AppNav() {
           return <Link href={item.href} aria-current={active ? "page" : undefined} key={item.label}><Icon name={item.icon}/><span>{item.label}</span></Link>;
         })}
       </div>
-      <button className="futureNav" type="button" disabled title="Mais funções em breve"><span>＋</span><small>Em breve</small></button>
+      {identity && <Link className="navIdentity" href="/conta" title={`Identidade ativa: ${identity.name}`}><Avatar src={identity.avatar} name={identity.name} size={38}/><small>{identity.name.split(" ")[0]}</small></Link>}
     </nav>
   );
 }

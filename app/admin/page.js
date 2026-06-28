@@ -20,7 +20,7 @@ export default function LoginPage() {
       setUser(data.user || null);
       if (data.user) {
         const requested = new URLSearchParams(window.location.search).get("retorno");
-        if (requested?.startsWith("/")) router.replace(requested);
+        router.replace(requested?.startsWith("/") ? requested : "/conta");
       }
     });
     const { data } = supabase.auth.onAuthStateChange((_event, session) => setUser(session?.user || null));

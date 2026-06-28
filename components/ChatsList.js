@@ -62,7 +62,7 @@ export default function ChatsList() {
       <section className="characterStrip" aria-label="Personagens disponíveis">
         {characters.map((character) => <Link href={`/personagens/${character.slug}`} key={character.slug}><Avatar src={character.avatar} name={character.name} size={66}/><span>{character.name.split(" ")[0]}</span></Link>)}
       </section>
-      {profile && <div className="activeIdentity">Você está falando como <strong>{getCharacter(profile.selected_character_slug)?.name}</strong><Link href="/escolher-personagem">Trocar</Link></div>}
+      {profile && <div className="activeIdentity">Você está falando como <strong>{getCharacter(profile.selected_character_slug)?.name}</strong><Link href="/conta">Gerenciar na conta</Link></div>}
       {creating && <form className="createRoom" onSubmit={createRoom}><h2>Criar chat público</h2><input name="title" minLength="3" maxLength="60" placeholder="Nome da sala" required/><textarea name="description" maxLength="180" placeholder="Sobre o que vocês vão conversar?"/><div><button type="button" onClick={() => setCreating(false)}>Cancelar</button><button type="submit">Criar sala</button></div></form>}
       <section className="rooms"><h2>Chats públicos</h2>{rooms.length === 0 && <p>Nenhuma sala ainda. Crie a primeira.</p>}{rooms.map((room) => {
         const speaker = getCharacter(room.last?.character_slug);

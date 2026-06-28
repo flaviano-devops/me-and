@@ -10,7 +10,8 @@ import ProfileSocialActions from "./ProfileSocialActions";
 export default function CharacterProfile({ character }) {
   const [profile, setProfile] = useState(character);
   const updateProfile = useCallback((value) => setProfile(value), []);
-  const coverStyle = profile.cover ? { backgroundImage: `url("${profile.cover}")` } : undefined;
+  const coverImages = [profile.cover, character.cover].filter((image, index, list) => image && list.indexOf(image) === index);
+  const coverStyle = coverImages.length ? { backgroundImage: coverImages.map((image) => `url("${image}")`).join(",") } : undefined;
 
   return (
     <section className="profile" aria-label={`Perfil de ${profile.name}`}>

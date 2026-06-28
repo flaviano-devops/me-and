@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import Avatar from "./Avatar";
 import { characters } from "@/lib/characters";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -14,6 +15,8 @@ export default function CharacterSelect() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const changing = searchParams.get("alterar") === "1";
   const supabase = getSupabaseBrowserClient();
 
   useEffect(() => {
@@ -25,12 +28,13 @@ export default function CharacterSelect() {
         supabase.from("member_profiles").select("selected_character_slug").eq("user_id", data.user.id).maybeSingle(),
         supabase.from("member_profiles").select("selected_character_slug,user_id").neq("user_id", data.user.id)
       ]).then(([{ data: profile }, { data: used }]) => {
+        if (profile && !changing) return router.replace("/conta");
         setSelected(profile?.selected_character_slug || null);
         setHasProfile(Boolean(profile));
         setOccupied((used || []).map((item) => item.selected_character_slug));
       });
     });
-  }, [router, supabase]);
+  }, [changing, router, supabase]);
 
   const confirm = async () => {
     if (!user || !selected || saving) return;
@@ -38,7 +42,7 @@ export default function CharacterSelect() {
     setMessage("Salvando sua identidade...");
     const payload = {
       user_id: user.id,
-      display_name: user.user_metadata?.full_name || user.email?.split("@")[0] || "Membro",
+      display_name: user.user_metadata?.display_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "Membro",
       avatar_url: user.user_metadata?.avatar_url || null,
       selected_character_slug: selected,
       updated_at: new Date().toISOString()
@@ -65,15 +69,15 @@ export default function CharacterSelect() {
     }
     if (error) { setSaving(false); return setMessage(`${error.message}${error.code ? ` (${error.code})` : ""}`); }
     if (!data) { setSaving(false); return setMessage("O Supabase não devolveu o perfil salvo. Confira as políticas da tabela member_profiles."); }
-    setMessage("Identidade salva. Abrindo seus chats...");
-    window.location.assign("/chats");
+    setMessage(hasProfile ? "Identidade atualizada. Voltando para sua conta..." : "Identidade salva. Abrindo seus chats...");
+    window.location.assign(hasProfile ? "/conta" : "/chats");
   };
 
   return (
     <main className="selectPage">
-      <span className="eyebrow">Sua identidade na comunidade</span>
-      <h1>Quem você será?</h1>
-      <p>Escolha um personagem para representar você nas salas. Você poderá trocar depois.</p>
+      <span className="eyebrow">{changing ? "Alterar identidade" : "Sua identidade na comunidade"}</span>
+      <h1>{changing ? "Escolha sua nova identidade" : "Quem você será?"}</h1>
+      <p>{changing ? "A mudança será aplicada a toda a comunidade e às próximas mensagens nos chats." : "Escolha um personagem para representar você em toda a comunidade. Depois, a troca será feita somente em Conta."}</p>
       <div className="selectGrid">
         {characters.map((character) => {
           const unavailable = occupied.includes(character.slug);
@@ -84,7 +88,10 @@ export default function CharacterSelect() {
           </button>
         )})}
       </div>
-      <button className="continueButton" disabled={!selected || saving} onClick={confirm}>{saving ? "Salvando..." : "Continuar para os chats"}</button>
+      <div className="selectionActions">
+        {changing && <Link href="/conta">Cancelar</Link>}
+        <button className="continueButton" disabled={!selected || saving} onClick={confirm}>{saving ? "Salvando..." : changing ? "Confirmar nova identidade" : "Continuar para os chats"}</button>
+      </div>
       {message && <p role="status">{message}</p>}
     </main>
   );
