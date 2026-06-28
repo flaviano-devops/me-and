@@ -1,12 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
+import { normalizeSupabaseUrl } from "@/lib/supabase/config";
 
 const PUBLIC_PATHS = ["/admin"];
 const SELECTION_PATH = "/escolher-personagem";
 
 export async function proxy(request) {
   let response = NextResponse.next({ request });
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const url = normalizeSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL);
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) return response;
 

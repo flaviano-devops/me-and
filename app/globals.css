@@ -98,7 +98,12 @@ h1,h2,p { text-wrap:balance; }
 .loginTabs button.active { background:var(--bg); color:var(--text); }
 .loginCard form { display:grid; gap:14px; margin-top:20px; }
 .loginCard label { display:grid; gap:6px; color:var(--muted); font-size:.86rem; font-weight:800; }
-.loginCard input { padding:12px; border:1px solid var(--border); border-radius:9px; background:var(--bg); color:var(--text); }
+.loginCard input { padding:12px; border:1px solid var(--border); border-radius:9px; background:var(--bg); color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; font-size:1rem; font-weight:500; letter-spacing:0; }
+.passwordField { position:relative; display:block; }
+.passwordField input { width:100%; padding-right:48px; }
+.passwordField button { position:absolute; top:50%; right:7px; width:36px; height:36px; display:grid; place-items:center; padding:0; border:0; border-radius:7px; background:transparent; color:var(--muted); cursor:pointer; transform:translateY(-50%); }
+.passwordField button:hover { background:var(--panel2); color:var(--text); }
+.passwordField svg { width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.8; }
 .loginSubmit { padding:12px; border:0; border-radius:9px; background:var(--red); color:#fff; font-weight:900; cursor:pointer; }
 .authMessage { padding:10px; border-radius:8px; background:var(--panel2); color:var(--text)!important; font-size:.85rem; }
 .backLink { display:inline-block; margin-top:10px; color:var(--muted); }
